@@ -30,7 +30,11 @@ public:
     string getName() const {
         return name;
     }
-    virtual void printDetails() const = 0;
+
+    virtual string display() // Вывод тарифа (виртуальная функция)
+    {
+        return name + " кофе: Объём = " + to_string(volume) + " Стоимость = " + to_string(cost);
+    }
 };
 
 // Класс "Кофе зерновое"
@@ -38,18 +42,18 @@ class CoffeeBeans : public Coffee {
 public:
     CoffeeBeans(string name, double volume, double cost) : Coffee(name, volume, cost) {}
 
-    void printDetails() const override {
-        cout << name << " кофе в зёрнах: Объём = " << volume << " Стоимость = " << cost << endl;
+    string display() override // Вывод тарифа
+    {
+        return name + " кофе в зёрнах: Объём = " + to_string(volume) + " Стоимость = " + to_string(cost);
     }
 };
 
-// Класс "Кофе молотое"
 class GroundCoffee : public Coffee {
 public:
     GroundCoffee(string name, double volume, double cost) : Coffee(name, volume, cost) {}
 
-    void printDetails() const override {
-        cout << name << " молотое кофе: Объём = " << volume << " Стоимость = " << cost << endl;
+    string display() override {
+        return name + " кофе молотое: Объём = " + to_string(volume) + " стоимость = " + to_string(cost);
     }
 };
 
@@ -58,8 +62,9 @@ class InstantCoffeeInJars : public Coffee {
 public:
     InstantCoffeeInJars(string name, double volume, double cost) : Coffee(name, volume, cost) {}
 
-    void printDetails() const override {
-        cout << name << " кофе растворимое в банках Объём = " << volume << " Стоимость = " << cost << endl;
+    string display() override // Вывод тарифа
+    {
+        return name + " кофе растворимое в банках: Объём = " + to_string(volume) + " Стоимость = " + to_string(cost);
     }
 };
 
@@ -68,8 +73,8 @@ class InstantCoffeeInPackets : public Coffee {
 public:
     InstantCoffeeInPackets(string name, double volume, double cost) : Coffee(name, volume, cost) {}
 
-    void printDetails() const override {
-        cout << " кофе в пакетиках: Объём = " << volume << " Стоимость = " << cost << endl;
+    string display() override {
+        return name + " кофе в пакетиках: Объём = " + to_string(volume) + " Стоимость = " + to_string(cost);
     }
 };
 
@@ -120,10 +125,14 @@ public:
         return coffees.size();
     }
 
-    void printCoffeeList() const {
+    string printCoffeeList() const {
+        string output;
+        int i = 1;
         for (const auto& coffee : coffees) {
-            coffee->printDetails();
+           output += i + "." + coffee->display() + "\n";
+           ++i;
         }
+        return output;
     }
 
     ~CoffeeTruck() {
@@ -173,7 +182,7 @@ int main() {
         switch (choice) {
         case 1: {
             cout << "Список кофе:" << endl;
-            truck.printCoffeeList();
+            cout << truck.printCoffeeList();
             break;
         }
         case 2: {
@@ -284,7 +293,7 @@ int main() {
                     std::vector<Coffee*> result = truck.findCoffeesInPriceRange(minCost, maxCost);
                     std::cout << "Кофе в диапазоне [" << minCost << ", " << maxCost << "]:" << endl;
                     for (const auto& coffee : result) {
-                        coffee->printDetails();
+                        cout << coffee->display() << endl;
                     }
                     break;
                 }
